@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>danamojo Donation Widget</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/widget.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="widget" id="widget">
+      <div class="mobile-pay-toggle" role="tablist" aria-label="Payment mode">
+        <button type="button" class="active" id="payOnlineTab">Pay Online</button>
+        <button type="button" id="payUpiTab">Pay with UPI</button>
+      </div>
+
+      <header class="widget-top">
+        <div class="top-left">
+          <div class="currency-wrap">
+            <button class="currency-btn" id="currencyBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="flag" id="currencyFlag"></span>
+              <span class="currency-label-full" id="currencyLabel">(₹) Indian Rupees</span>
+              <span class="currency-label-short" id="currencyLabelShort">(₹)INR</span>
+              <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </button>
+            <div class="currency-menu" id="currencyMenu" hidden>
+              <button type="button" data-country="in">
+                <span class="flag flag-in"></span> (₹) Indian Rupees
+              </button>
+              <button type="button" data-country="us">
+                <span class="flag flag-us"></span> ($) US Dollar
+              </button>
+            </div>
+          </div>
+          <button class="info-dot" id="fxInfoBtn" type="button" aria-label="Currency information">i</button>
+        </div>
+
+        <div class="top-right">
+          <a class="scan-btn desktop-only" href="#scan">Scan and Donate</a>
+          <button class="icon-btn" id="calcBtn" type="button" title="Calculator" aria-label="Open calculator">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+              <path d="M8 8h8M8 12h2m3 0h3M8 16h2m3 0h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+          <button class="icon-btn view-toggle desktop-only" id="viewToggle" type="button" title="Switch layout" aria-label="Switch layout">
+            <svg class="icon-grid" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <rect x="1" y="1" width="7.5" height="7.5" rx="1" />
+              <rect x="11.5" y="1" width="7.5" height="7.5" rx="1" />
+              <rect x="1" y="11.5" width="7.5" height="7.5" rx="1" />
+              <rect x="11.5" y="11.5" width="7.5" height="7.5" rx="1" />
+            </svg>
+            <svg class="icon-list" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <circle cx="4" cy="6" r="1.6" />
+              <circle cx="4" cy="12" r="1.6" />
+              <circle cx="4" cy="18" r="1.6" />
+              <rect x="8" y="4.7" width="14" height="2.4" rx="1" />
+              <rect x="8" y="10.7" width="14" height="2.4" rx="1" />
+              <rect x="8" y="16.7" width="14" height="2.4" rx="1" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="freq-toggle" role="tablist">
+        <button type="button" id="onceBtn" role="tab">Donate Once</button>
+        <button type="button" id="monthlyBtn" role="tab">Donate Monthly</button>
+      </div>
+
+      <div class="list-head" id="listHead">
+        <span></span>
+        <span>Cost</span>
+        <span>Units</span>
+        <span>Amount</span>
+      </div>
+
+      <div class="online-flow" id="onlineFlow">
+        <div class="items" id="items"></div>
+
+        <section class="checkout sticky-footer" id="stickyFooter">
+          <p class="ngo-copy desktop-only">
+            Our NGO works for the economics and social empowerment of rural children
+            in the villages across karnataka.
+          </p>
+          <div class="summary">
+            <div class="total-line" id="simpleTotalLine">
+              <span>Total Amount :</span>
+              <div class="total-vals">
+                <strong id="totalPrimary">₹0</strong>
+                <span id="totalSecondary" class="inr-pill" hidden></span>
+              </div>
+            </div>
+
+            <div class="footer-cart-extras" id="footerCartExtras">
+              <label class="check-row" id="giftCheckRow">
+                <input type="checkbox" id="giftCheck" />
+                <span>Make my donation a gift</span>
+                <button class="info-dot gift" id="giftInfoBtn" type="button" aria-label="Gift information">i</button>
+                <div class="tooltip gift-tip" id="giftTooltip" hidden>
+                  Make my donation a gift and send e-cards to friends and family
+                </div>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" id="adminCheck" />
+                <span class="admin-label-full">Add transaction fees to my donation</span>
+                <span class="admin-label-short">I will cover admin costs</span>
+              </label>
+
+              <div class="mobile-breakdown" id="mobileBreakdown">
+                <div class="break-line">
+                  <span>Total Amount :</span>
+                  <strong id="breakTotal">₹0</strong>
+                </div>
+                <div class="break-line">
+                  <span>Admin Cost :</span>
+                  <strong id="breakAdmin">₹0</strong>
+                </div>
+                <div class="break-line grand">
+                  <span>Grand Total :</span>
+                  <strong id="breakGrand">₹0</strong>
+                </div>
+              </div>
+            </div>
+
+            <button class="donate-now" id="donateNow" type="button" disabled>Donate Now</button>
+
+            <div class="trust">
+              <span class="secure">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3l8 4v6c0 5-3.4 8.4-8 9.5C7.4 21.4 4 18 4 13V7l8-4z" fill="#2e7d32" />
+                  <path d="M8.5 12.5l2.2 2.2 4.8-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" />
+                </svg>
+                <span class="secure-full">SECURE</span>
+                <span class="secure-ssl">SECURE SSL ENCRYPTION</span>
+              </span>
+              <span class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="mobile-upi-flow" id="mobileUpiFlow" hidden>
+        <div class="upi-steps-card">
+          <h3>Steps to follow :</h3>
+          <div class="upi-step">
+            <span class="step-num">1</span>
+            <div>
+              <b>Enter &amp; Pay</b>
+              <p>Enter Details → Pay with preferred UPI app</p>
+            </div>
+          </div>
+          <div class="upi-step">
+            <span class="step-num">2</span>
+            <div>
+              <b>Claim Tax Benefit</b>
+              <p>Confirm payment details → Enter Donor info</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="mobile-upi-card" id="mobileUpiPayForm">
+          <h4>Pay with UPI</h4>
+          <label class="field money">
+            <span class="prefix" id="upiPrefix">₹</span>
+            <input type="text" id="mobileUpiAmount" placeholder="Enter Amount" required />
+          </label>
+          <label class="field">
+            <input type="email" id="mobileUpiEmail" placeholder="Enter email ID" required />
+          </label>
+          <div class="phone-input">
+            <span class="flag flag-in"></span>
+            <span>+91</span>
+            <input type="tel" id="mobileUpiPhone" placeholder="9XXXXXXXX90" required />
+          </div>
+          <button type="submit" class="proceed-btn full upi-grad">Pay with UPI</button>
+        </form>
+
+        <form class="mobile-upi-card" id="mobileUpiClaimForm">
+          <h4>Claim 80G Tax Benefit<span class="req">*</span></h4>
+          <label class="field">
+            <input type="text" id="mobileUpiRef" placeholder="UPI Ref No." required />
+          </label>
+          <label class="field money">
+            <span class="prefix">₹</span>
+            <input type="text" id="mobileUpiClaimAmt" placeholder="Enter Amount" required />
+          </label>
+          <button type="submit" class="proceed-btn full grey">Confirm</button>
+        </form>
+      </div>
+    </div>
+
+    <section class="scan-panel" id="scan">
+      <div class="scan-banner">Scan and Donate Instantly</div>
+      <div class="scan-body">
+        <div class="scan-steps">
+          <h3>Steps to follow:</h3>
+          <p><b>Step 1:</b> Enter details → Generate QR → scan to donate with any UPI app</p>
+          <p><b>Step 2:</b> To claim tax benefit confirm payment details → Enter additional details</p>
+        </div>
+
+        <div class="scan-col">
+          <div class="mini-label">Step 1</div>
+          <div class="qr-box">
+            <div class="bhim">BHIM UPI</div>
+            <div class="qr" id="qrArt" aria-hidden="true"></div>
+            <button type="button" class="mini-red" id="overlayGen">Generate QR</button>
+          </div>
+          <form class="mini-form" id="qrForm">
+            <input type="text" id="qrAmount" placeholder="Enter Amount" />
+            <input type="email" id="qrEmail" placeholder="Enter email id" />
+            <div class="phone-row">
+              <span class="cc">+91</span>
+              <input type="tel" id="qrPhone" placeholder="Mobile number" />
+            </div>
+            <button type="submit" class="mini-red">Generate QR</button>
+          </form>
+        </div>
+
+        <div class="scan-col">
+          <div class="mini-label">Step 2</div>
+          <form class="tax-form" id="taxForm">
+            <h4>Claim 80G Tax Benefit*</h4>
+            <input type="text" id="utrNo" placeholder="UPI Ref No." />
+            <input type="text" id="taxAmount" placeholder="Enter Amount" />
+            <button type="submit" class="mini-red light">Confirm</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal more-modal" id="moreModal" hidden>
+    <div class="more-card">
+      <button class="modal-x dark more-close" id="moreClose" type="button" aria-label="Close">×</button>
+      <h3 id="moreTitle">Online Education</h3>
+      <div class="more-grid">
+        <div class="more-left">
+          <img id="moreImg" class="more-photo" alt="" />
+          <p class="more-tax">Eligible Tax Benefit : India, USA</p>
+          <p class="more-cost" id="moreCost">Cost : ₹2095</p>
+          <div class="more-qr">
+            <div class="bhim">BHIM UPI</div>
+            <div class="qr more-qr-art" id="moreQrArt" aria-hidden="true"></div>
+            <button type="button" class="mini-red more-qr-btn" id="moreQrBtn">Generate QR</button>
+            <p class="powered more-powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+        </div>
+        <div class="more-right" id="moreBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fx-modal" id="fxModal" hidden>
+    <div class="fx-card">
+      <button class="modal-x-circle" id="fxClose" type="button" aria-label="Close">×</button>
+      <p>
+        Foreign currency values are shown for reference only. Payments are processed in US$
+        for all non-Indian issued cards and INR for Indian cards. Your card issuer will apply
+        its own exchange rate in case your card currency is different from the transaction currency.
+      </p>
+    </div>
+  </div>
+
+  <div class="modal" id="calcModal" hidden>
+    <div class="modal-card">
+      <button class="modal-x" id="calcClose" type="button">×</button>
+      <h3>Donation calculator</h3>
+      <label class="calc-field">Amount
+        <input type="number" id="calcAmt" min="1" value="2095" />
+      </label>
+      <p class="calc-out" id="calcOut"></p>
+    </div>
+  </div>
+
+  <!-- Monthly: Set up Recurring Donation -->
+  <div class="modal checkout-modal" id="recurringModal" hidden>
+    <div class="checkout-card">
+      <div class="stepper-row">
+        <div class="chev-steps">
+          <span class="chev active">your information</span>
+          <span class="chev">payment</span>
+          <span class="chev">confirmation</span>
+        </div>
+        <button class="modal-x dark" type="button" data-close="recurringModal" aria-label="Close">×</button>
+      </div>
+      <h2 class="checkout-title">Set up Recurring Donation</h2>
+      <div class="recurring-note">
+        <p><b>Indian Donors :</b> You can set up recurring donations using Cards / Netbanking / UPI. For UPI Autopay, please use PhonePe / GPay / BHIM.</p>
+        <p><b>International Donors :</b> You can set up recurring donations using Visa / Mastercard.</p>
+      </div>
+      <form id="recurringForm" class="recurring-form">
+        <label class="field">
+          <span>I want to donate once every<span class="req">*</span></span>
+          <select id="recurEvery" required>
+            <option value="">Select</option>
+            <option value="month">Every Month</option>
+            <option value="quarter">Every Quarter</option>
+            <option value="year">Every Year</option>
+          </select>
+        </label>
+        <div class="field-row two">
+          <label class="field">
+            <span>Start Date<span class="req">*</span></span>
+            <input type="text" id="recurStart" placeholder="DD-MM-YYYY" required />
+          </label>
+          <label class="field">
+            <span>End Date<span class="req">*</span></span>
+            <input type="text" id="recurEnd" placeholder="DD-MM-YYYY" required />
+          </label>
+        </div>
+        <p class="cancel-note">
+          To cancel your recurring donation, please email
+          <a href="mailto:support@danamojo.org">support@danamojo.org</a>
+          or
+          <a href="mailto:help@danamojo.org">help@danamojo.org</a>
+        </p>
+        <div class="checkout-foot">
+          <div class="important-box">
+            <b>Important Note :</b>
+            <p>For Net Banking mandates, banks may take 2–5 working days to approve. Your first debit will happen after bank approval.</p>
+          </div>
+          <div class="checkout-actions">
+            <button type="submit" class="proceed-btn">Proceed to Pay</button>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 80G Tax Benefit: Enter donor details -->
+  <div class="modal checkout-modal" id="donorModal" hidden>
+    <div class="checkout-card donor-card">
+      <div class="donor-topbar"></div>
+      <button class="modal-x dark donor-x" type="button" data-close="donorModal" aria-label="Close">×</button>
+      <h2 class="checkout-title no-line">Enter donor details</h2>
+      <p class="donor-sub">Please fill out the below details to receive your 80G tax receipt.</p>
+      <form id="donorForm" class="donor-form">
+        <div class="field-row three">
+          <label class="field">
+            <span>Currency<span class="req">*</span></span>
+            <input type="text" id="donorCurrency" readonly />
+          </label>
+          <label class="field">
+            <span>Total Donation Amount<span class="req">*</span></span>
+            <input type="text" id="donorTotal" readonly />
+          </label>
+          <label class="field">
+            <span>UPI Reference No.<span class="req">*</span></span>
+            <input type="text" id="donorUpi" placeholder="Enter UPI Ref No." required />
+          </label>
+        </div>
+        <div class="field-row two">
+          <label class="field">
+            <span>ID Proof<span class="req">*</span></span>
+            <select id="donorIdProof" required>
+              <option value="PAN">PAN</option>
+              <option value="Aadhaar">Aadhaar</option>
+              <option value="Passport">Passport</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Pan #<span class="req">*</span></span>
+            <input type="text" id="donorPan" placeholder="Enter PAN" required />
+          </label>
+        </div>
+        <label class="field">
+          <span>Full Name<span class="req">*</span></span>
+          <input type="text" id="donorFullName" placeholder="Enter Full Name" required />
+        </label>
+        <div class="field-row address-row">
+          <label class="field grow">
+            <span>Address<span class="req">*</span></span>
+            <textarea id="donorAddress" rows="4" placeholder="Enter Address" required></textarea>
+          </label>
+          <div class="stack">
+            <label class="field">
+              <span>Postal Code<span class="req">*</span></span>
+              <input type="text" id="donorPostal" placeholder="Postal Code" required />
+            </label>
+            <label class="field">
+              <span>Country<span class="req">*</span></span>
+              <input type="text" id="donorCountry" value="India" readonly />
+            </label>
+          </div>
+        </div>
+        <div class="field-row two">
+          <label class="field">
+            <span>State<span class="req">*</span></span>
+            <input type="text" id="donorState" placeholder="State" required />
+          </label>
+          <label class="field">
+            <span>City<span class="req">*</span></span>
+            <input type="text" id="donorCity" placeholder="City" required />
+          </label>
+        </div>
+        <div class="field-row two">
+          <label class="field">
+            <span>Email<span class="req">*</span></span>
+            <input type="email" id="donorEmail" placeholder="Email" required />
+          </label>
+          <label class="field">
+            <span>Mobile<span class="req">*</span></span>
+            <div class="phone-input">
+              <span class="flag flag-in"></span>
+              <span>+ 91</span>
+              <input type="tel" id="donorMobile" placeholder="Mobile number" required />
+            </div>
+            <label class="inline-check">
+              <input type="checkbox" id="donorCitizen" required />
+              I confirm that I am indian citizen
+            </label>
+          </label>
+        </div>
+        <label class="field">
+          <span>Message to NGO<span class="req">*</span></span>
+          <input type="text" id="donorMessage" placeholder="Message to NGO" required />
+        </label>
+        <label class="inline-check gift-end">
+          <input type="checkbox" id="donorGift" />
+          Make my donation a gift <span class="req">*</span>
+        </label>
+        <div class="donor-actions">
+          <button type="reset" class="reset-btn">Reset</button>
+          <div class="checkout-actions">
+            <button type="submit" class="proceed-btn square">Submit</button>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Once: Register / Your Information -->
+  <div class="modal checkout-modal" id="registerModal" hidden>
+    <div class="checkout-card register-card">
+      <div class="stepper-row">
+        <div class="chev-steps" id="infoSteps">
+          <span class="chev active">your information</span>
+          <span class="chev">payment</span>
+          <span class="chev">confirmation</span>
+        </div>
+        <div class="reg-total-wrap">
+          <span>Total Amount : <strong id="regTotal">₹0.00</strong></span>
+          <button class="info-dot" type="button" title="Total info">i</button>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-checkout aria-label="Close">×</button>
+      </div>
+
+      <div class="tax-country-bar">
+        <h3>Select your Country for Tax Benefits</h3>
+        <div class="tax-tabs" id="taxTabs">
+          <button type="button" class="tax-tab active" data-tax="india">India</button>
+          <button type="button" class="tax-tab" data-tax="usa">USA</button>
+          <button type="button" class="tax-tab" data-tax="other">Other</button>
+        </div>
+      </div>
+      <p class="tax-disclaimer">
+        The following information is required* by Indian authorities and payment processors.
+        We do not collect any additional details, and all information you provide will remain fully confidential.
+      </p>
+
+      <form id="registerForm">
+        <!-- India entity -->
+        <div class="entity-fields" id="entityIndia" data-entity="india">
+          <div class="reg-cols">
+            <div>
+              <label class="field">
+                <span>Nationality<span class="req">*</span></span>
+                <select required>
+                  <option value="">select country</option>
+                  <option value="IN">India</option>
+                  <option value="US">United States</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Full Name<span class="req">*</span></span>
+                <input type="text" placeholder="Enter Name" required />
+              </label>
+              <label class="field">
+                <span>Address<span class="req">*</span></span>
+                <textarea rows="4" placeholder="Enter Address" required></textarea>
+              </label>
+              <label class="field tip-wrap">
+                <span>ID Proof<span class="req">*</span>
+                  <button type="button" class="info-dot tip-btn" data-tip="idproof">i</button>
+                </span>
+                <select required>
+                  <option value="PAN">PAN</option>
+                  <option value="Aadhaar">Aadhaar</option>
+                  <option value="Passport">Passport</option>
+                </select>
+                <span class="field-tip" hidden>PAN is required to claim tax benefits or for donations exceeding ₹50,000.</span>
+              </label>
+              <label class="field">
+                <span>Email<span class="req">*</span></span>
+                <input type="email" placeholder="Email" required />
+              </label>
+            </div>
+            <div>
+              <label class="field">
+                <span>Country<span class="req">*</span></span>
+                <select required>
+                  <option value="India" selected>India</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Postal Code<span class="req">*</span></span>
+                <input type="text" placeholder="Postal Code" required />
+              </label>
+              <label class="field">
+                <span>State<span class="req">*</span></span>
+                <input type="text" placeholder="Enter State" required />
+              </label>
+              <label class="field">
+                <span>City<span class="req">*</span></span>
+                <input type="text" placeholder="Enter City" required />
+              </label>
+              <label class="field">
+                <span>PAN #<span class="req">*</span></span>
+                <input type="text" placeholder="XYZ" required />
+              </label>
+              <label class="field">
+                <span>Mobile<span class="req">*</span></span>
+                <div class="phone-input">
+                  <span class="flag flag-in"></span>
+                  <span>+91</span>
+                  <input type="tel" placeholder="Mobile number" required />
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- USA entity -->
+        <div class="entity-fields" id="entityUsa" data-entity="usa" hidden>
+          <div class="reg-cols">
+            <div>
+              <label class="field">
+                <span>Country<span class="req">*</span></span>
+                <select required>
+                  <option value="">Select Country</option>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Full Name<span class="req">*</span></span>
+                <input type="text" placeholder="Enter Name" required />
+              </label>
+              <label class="field">
+                <span>Address<span class="req">*</span></span>
+                <textarea rows="4" placeholder="Enter Address" required></textarea>
+              </label>
+              <label class="field">
+                <span>Email<span class="req">*</span></span>
+                <input type="email" placeholder="Email" required />
+              </label>
+            </div>
+            <div>
+              <label class="field">
+                <span>Postal Code<span class="req">*</span></span>
+                <input type="text" placeholder="Postal Code" required />
+              </label>
+              <label class="field">
+                <span>State<span class="req">*</span></span>
+                <input type="text" placeholder="Enter State" required />
+              </label>
+              <label class="field">
+                <span>City<span class="req">*</span></span>
+                <input type="text" placeholder="Enter City" required />
+              </label>
+              <label class="field">
+                <span>Mobile<span class="req">*</span></span>
+                <div class="phone-input">
+                  <span class="flag flag-us"></span>
+                  <span>+1</span>
+                  <input type="tel" placeholder="Mobile number" required />
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other entity -->
+        <div class="entity-fields" id="entityOther" data-entity="other" hidden>
+          <div class="reg-cols">
+            <div>
+              <label class="field tip-wrap">
+                <span>Nationality<span class="req">*</span>
+                  <button type="button" class="info-dot tip-btn" data-tip="nationality">i</button>
+                </span>
+                <select required>
+                  <option value="">select country</option>
+                  <option value="UK">United Kingdom</option>
+                  <option value="AE">UAE</option>
+                  <option value="SG">Singapore</option>
+                  <option value="OTHER">Other</option>
+                </select>
+                <span class="field-tip" hidden>Nationality should match your passport.</span>
+              </label>
+              <label class="field">
+                <span>Full Name<span class="req">*</span></span>
+                <input type="text" placeholder="Enter Name" required />
+              </label>
+              <label class="field">
+                <span>Address<span class="req">*</span></span>
+                <textarea rows="4" placeholder="Enter Address" required></textarea>
+              </label>
+              <label class="field tip-wrap">
+                <span>ID Proof<span class="req">*</span>
+                  <button type="button" class="info-dot tip-btn" data-tip="idproof">i</button>
+                </span>
+                <select required>
+                  <option value="Passport">Passport</option>
+                  <option value="National ID">National ID</option>
+                  <option value="PAN">PAN</option>
+                </select>
+                <span class="field-tip" hidden>PAN is required to claim tax benefits or for donations exceeding ₹50,000.</span>
+              </label>
+              <label class="field">
+                <span>Email<span class="req">*</span></span>
+                <input type="email" placeholder="Email" required />
+              </label>
+            </div>
+            <div>
+              <label class="field tip-wrap">
+                <span>Country<span class="req">*</span>
+                  <button type="button" class="info-dot tip-btn" data-tip="residence">i</button>
+                </span>
+                <input type="text" placeholder="Country of residence" required />
+                <span class="field-tip" hidden>Country of residence where you currently live.</span>
+              </label>
+              <label class="field">
+                <span>Postal Code<span class="req">*</span></span>
+                <input type="text" placeholder="Postal Code" required />
+              </label>
+              <label class="field">
+                <span>State<span class="req">*</span></span>
+                <input type="text" placeholder="Enter State" required />
+              </label>
+              <label class="field">
+                <span>City<span class="req">*</span></span>
+                <input type="text" placeholder="Enter City" required />
+              </label>
+              <label class="field">
+                <span>ID<span class="req">*</span></span>
+                <input type="text" placeholder="Enter ID number" required />
+              </label>
+              <label class="field">
+                <span>Mobile<span class="req">*</span></span>
+                <div class="phone-input">
+                  <span class="flag flag-in"></span>
+                  <span>+91</span>
+                  <input type="tel" placeholder="Mobile number" required />
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-foot register-foot">
+          <div class="important-box" id="regNote">
+            <b>Important Notes :</b>
+            <ul>
+              <li>Donations to Indian NGOs may be eligible for tax benefits under Section 80G.</li>
+              <li>US donors may claim benefits under Section 501(c)(3) where applicable.</li>
+            </ul>
+          </div>
+          <div class="checkout-actions">
+            <button type="submit" class="proceed-btn">Proceed To Pay</button>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment step -->
+  <div class="modal checkout-modal" id="paymentModal" hidden>
+    <div class="checkout-card payment-card">
+      <div class="stepper-row">
+        <div class="chev-steps">
+          <span class="chev">your information</span>
+          <span class="chev active">payment</span>
+          <span class="chev">confirmation</span>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-checkout aria-label="Close">×</button>
+      </div>
+
+      <div class="payment-layout">
+        <div class="pay-left">
+          <h3 class="pay-heading">
+            <span class="pay-ico" aria-hidden="true">👛</span> Payment Options
+          </h3>
+          <div class="pay-methods" id="payMethods">
+            <button type="button" class="pay-method active" data-method="online">
+              <span class="pm-ico">💳</span>
+              <span>
+                <b>Online Payment</b>
+                <small>Debit cards, Credit cards, Netbanking (India only), EMI plans (India only).</small>
+              </span>
+            </button>
+            <button type="button" class="pay-method" data-method="upi">
+              <span class="pm-ico">▦</span>
+              <span>
+                <b>Scan to Pay</b>
+                <small>All UPI - enabled payment apps (India only).</small>
+              </span>
+            </button>
+            <button type="button" class="more-toggle" id="morePayToggle">
+              More Options <span>▾</span>
+            </button>
+            <div class="more-pay" id="morePay">
+              <button type="button" class="pay-method" data-method="cheque">
+                <span class="pm-ico">📄</span>
+                <span>
+                  <b>Cheque/ Demand Draft</b>
+                  <small>Donate using a Cheque or Demand Draft issued by your bank.</small>
+                </span>
+              </button>
+              <button type="button" class="pay-method" data-method="bank">
+                <span class="pm-ico">🏦</span>
+                <span>
+                  <b>Bank Transfer</b>
+                  <small>Donate by transferring funds directly from your bank via NEFT / RTGS / IMPS / SWIFT.</small>
+                </span>
+              </button>
+              <button type="button" class="pay-method" data-method="cash">
+                <span class="pm-ico">💵</span>
+                <span>
+                  <b>Cash Transfer</b>
+                  <small>Donate by depositing cash at an authorized counter or branch.</small>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pay-right">
+          <h3 class="pay-heading">
+            <span class="pay-ico" aria-hidden="true">🎁</span> Donation Summary
+          </h3>
+
+          <!-- Online -->
+          <div class="pay-panel" id="panelOnline" data-panel="online">
+            <button type="button" class="proceed-btn full" id="payNowBtn">Pay Now</button>
+            <p class="powered center">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+            <div class="summary-box" id="onlineSummary"></div>
+            <button type="button" class="proceed-btn full" id="payNowBtn2">Pay Now</button>
+            <p class="powered center">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+            <button type="button" class="linkish" id="failDemoBtn">Simulate payment failed</button>
+          </div>
+
+          <!-- UPI / Scan -->
+          <div class="pay-panel" id="panelUpi" data-panel="upi" hidden>
+            <p class="upi-hint">Use any UPI app to scan &amp; pay.</p>
+            <div class="pay-qr-wrap">
+              <div class="bhim">BHIM UPI</div>
+              <div class="qr pay-qr" id="payQrArt"></div>
+              <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+            </div>
+            <div class="summary-box" id="upiSummary"></div>
+          </div>
+
+          <!-- Cheque -->
+          <div class="pay-panel" id="panelCheque" data-panel="cheque" hidden>
+            <div class="method-note">
+              <b>Note:</b> Please make cheques payable to <b>Danapay Trust</b>. Write your Donation ID on the back and mail to Danapay Trust, Demo Address, Uttarakhand, India.
+            </div>
+            <form id="chequeForm" class="method-form">
+              <label class="field">
+                <span>Cheque/ DD Bank Name<span class="req">*</span></span>
+                <input type="text" placeholder="Enter Bank Name" required />
+              </label>
+              <label class="field">
+                <span>Cheque/ DD Number<span class="req">*</span></span>
+                <input type="text" placeholder="e.g. 123123345" required />
+              </label>
+              <label class="field">
+                <span>Cheque/ DD Date<span class="req">*</span></span>
+                <input type="text" placeholder="dd-mm-yyyy" required />
+              </label>
+              <button type="submit" class="proceed-btn square">Submit</button>
+            </form>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+
+          <!-- Bank -->
+          <div class="pay-panel" id="panelBank" data-panel="bank" hidden>
+            <div class="account-box">
+              <b>Please Transfer Money To This Account:</b>
+              <ul>
+                <li><span>Account name</span><strong>Danapay Trust (Demo)</strong></li>
+                <li><span>Bank Name</span><strong>Yes Bank Ltd</strong></li>
+                <li><span>Branch</span><strong>JP Nagar</strong></li>
+                <li><span>Account Number</span><strong>1111111111</strong></li>
+                <li><span>IFSC Code</span><strong>SBIC0000001</strong></li>
+              </ul>
+            </div>
+            <p class="method-note">Please enter your transaction reference number below so that we can send your acknowledgement promptly.</p>
+            <form id="bankForm" class="method-form">
+              <label class="field">
+                <span>Date of Transfer<span class="req">*</span></span>
+                <input type="text" placeholder="dd-mm-yyyy" required />
+              </label>
+              <label class="field">
+                <span>Transaction Reference Number<span class="req">*</span></span>
+                <input type="text" placeholder="e.g. 2378423" required />
+              </label>
+              <button type="submit" class="proceed-btn square">Submit</button>
+            </form>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+
+          <!-- Cash -->
+          <div class="pay-panel" id="panelCash" data-panel="cash" hidden>
+            <p class="method-note">Please provide the details below so we can send your cash donation acknowledgement promptly.</p>
+            <form id="cashForm" class="method-form">
+              <label class="field">
+                <span>Date of Transfer<span class="req">*</span></span>
+                <input type="text" placeholder="dd-mm-yyyy" required />
+              </label>
+              <button type="submit" class="proceed-btn square">Submit</button>
+            </form>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Success -->
+  <div class="modal checkout-modal" id="successModal" hidden>
+    <div class="checkout-card confirm-card">
+      <div class="stepper-row">
+        <div class="chev-steps">
+          <span class="chev">your information</span>
+          <span class="chev">payment</span>
+          <span class="chev active">confirmation</span>
+        </div>
+        <div class="reg-total-wrap">
+          <span>Total Amount : <strong id="successTotal">₹0.00</strong></span>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-checkout aria-label="Close">×</button>
+      </div>
+      <div class="confirm-layout">
+        <div class="thanks-card">
+          <div class="thanks-script">Thank You</div>
+          <p class="thanks-line"><b id="thanksName">Donor</b>, for your generosity. Together, we are making a difference!</p>
+          <p class="thanks-amt">Donated Amount : <b id="thanksAmt">₹0.00</b></p>
+          <p class="thanks-to">Donated to <b>Sample Charity</b></p>
+          <p class="powered thanks-powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+        </div>
+        <div class="confirm-right">
+          <p>Your tax receipt will be issued once the donation is confirmed in our bank account.</p>
+          <div class="ref-box">Donation reference number : <b id="successRef">214334</b></div>
+          <p class="share-label">Share your contribution with your friends</p>
+          <div class="share-row">
+            <span class="share fb">f</span>
+            <span class="share x">𝕏</span>
+            <span class="share wa">W</span>
+            <span class="share in">in</span>
+            <span class="share more">↗</span>
+          </div>
+          <label class="field">
+            <span>Send a message to your Charity</span>
+            <textarea rows="3" placeholder="Write a message…"></textarea>
+          </label>
+          <div class="confirm-actions">
+            <button type="button" class="outline-btn" data-close-checkout>No Thanks</button>
+            <button type="button" class="proceed-btn square" id="sendMsgSuccess">Send Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Failed -->
+  <div class="modal checkout-modal" id="failedModal" hidden>
+    <div class="checkout-card confirm-card">
+      <div class="stepper-row">
+        <div class="chev-steps">
+          <span class="chev">your information</span>
+          <span class="chev">payment</span>
+          <span class="chev active">confirmation</span>
+        </div>
+        <div class="reg-total-wrap">
+          <span>Total Amount : <strong id="failedTotal">₹0.00</strong></span>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-checkout aria-label="Close">×</button>
+      </div>
+      <div class="confirm-layout failed-layout">
+        <div class="failed-left">
+          <div class="failed-icon" aria-hidden="true">💳</div>
+          <h2>Payment Failed</h2>
+          <p>Your payment of <b id="failedAmt">₹0.00</b> to <b>Sample Charity</b> could not be processed.</p>
+          <p class="ref-muted">Ref: <span id="failedRef">214334</span></p>
+          <button type="button" class="proceed-btn square" id="retryPayBtn">Try Again</button>
+        </div>
+        <div class="confirm-right">
+          <label class="field">
+            <span>Send a message to your Charity</span>
+            <textarea rows="4" placeholder="Write a message…"></textarea>
+          </label>
+          <div class="confirm-actions">
+            <button type="button" class="outline-btn" data-close-checkout>No Thanks</button>
+            <button type="button" class="proceed-btn square" id="sendMsgFailed">Send Message</button>
+          </div>
+          <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gift flow: details -->
+  <div class="modal checkout-modal" id="giftDetailsModal" hidden>
+    <div class="checkout-card gift-card">
+      <div class="stepper-row">
+        <div class="chev-steps">
+          <span class="chev active">Enter Details</span>
+          <span class="chev">Choose design</span>
+          <span class="chev">Preview</span>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-gift aria-label="Close">×</button>
+      </div>
+      <h2 class="checkout-title">This Donation is a Gift</h2>
+      <div class="occasion-tabs" id="occasionTabs">
+        <button type="button" class="occ-tab active" data-occ="personal">for a personal occasion</button>
+        <button type="button" class="occ-tab" data-occ="festive">for a festive occasion</button>
+        <button type="button" class="occ-tab" data-occ="honour">In honour of</button>
+      </div>
+      <form id="giftDetailsForm" class="gift-form">
+        <label class="field">
+          <span>Name of giftee<span class="req">*</span></span>
+          <input type="text" id="gifteeName" placeholder="Enter giftee name" required />
+        </label>
+        <label class="field">
+          <span>Giftee's email<span class="req">*</span></span>
+          <input type="email" id="gifteeEmail" placeholder="Enter Email ID [we will let your giftee know you made a donation on their behalf]" required />
+        </label>
+        <label class="field">
+          <span>Occasion of gifting<span class="req">*</span></span>
+          <select id="gifteeOccasion" required>
+            <option value="">Select occasion of gifting</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Anniversary">Anniversary</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Festival">Festival</option>
+            <option value="In Honour">In Honour</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Subject line<span class="req">*</span></span>
+          <input type="text" id="gifteeSubject" placeholder="Enter Subject" required />
+        </label>
+        <label class="field">
+          <span>Your message<span class="req">*</span></span>
+          <textarea id="gifteeMessage" rows="5" placeholder="start your message with a greeting to the recipient (e.g., Hi [Name]) and sign off with your name to personalize your message." required></textarea>
+        </label>
+        <label class="inline-check">
+          <input type="checkbox" id="hideGiftAmount" />
+          Hide my gift amount.
+        </label>
+        <div class="gift-actions">
+          <div></div>
+          <div class="checkout-actions">
+            <button type="submit" class="proceed-btn square">Next</button>
+            <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Gift flow: design -->
+  <div class="modal checkout-modal" id="giftDesignModal" hidden>
+    <div class="checkout-card gift-card">
+      <div class="stepper-row">
+        <button type="button" class="back-arrow" id="giftDesignBack" aria-label="Back">←</button>
+        <div class="chev-steps">
+          <span class="chev">Enter Details</span>
+          <span class="chev active">Choose design</span>
+          <span class="chev">Preview</span>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-gift aria-label="Close">×</button>
+      </div>
+      <h2 class="checkout-title no-line">Choose a Design</h2>
+      <div class="design-grid" id="designGrid">
+        <button type="button" class="design-tile" data-design="0" style="background-image:url('https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80')"></button>
+        <button type="button" class="design-tile active" data-design="1" style="background-image:url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80')"></button>
+        <button type="button" class="design-tile" data-design="2" style="background-image:url('https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=400&q=80')"></button>
+        <button type="button" class="design-tile" data-design="3" style="background-image:url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=400&q=80')"></button>
+        <button type="button" class="design-tile" data-design="4" style="background-image:url('https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&w=400&q=80')"></button>
+        <button type="button" class="design-tile" data-design="5" style="background-image:url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=400&q=80')"></button>
+      </div>
+      <p class="upload-hint">or upload a custom image [max size 600 × 300]</p>
+      <div class="upload-box">
+        <span>Drag files or</span>
+        <label class="browse-btn">Browse File
+          <input type="file" id="giftUpload" accept="image/*" hidden />
+        </label>
+      </div>
+      <div class="gift-actions">
+        <div></div>
+        <div class="checkout-actions">
+          <button type="button" class="proceed-btn square" id="giftDesignNext">Next</button>
+          <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gift flow: preview -->
+  <div class="modal checkout-modal" id="giftPreviewModal" hidden>
+    <div class="checkout-card gift-card">
+      <div class="stepper-row">
+        <button type="button" class="back-arrow" id="giftPreviewBack" aria-label="Back">←</button>
+        <div class="chev-steps">
+          <span class="chev">Enter Details</span>
+          <span class="chev">Choose design</span>
+          <span class="chev active">Preview</span>
+        </div>
+        <button class="modal-x dark checkout-close" type="button" data-close-gift aria-label="Close">×</button>
+      </div>
+      <h2 class="checkout-title no-line">Preview and make your donation.</h2>
+      <p class="preview-sub">Review the mail that will be sent to <b id="previewGiftee">Giftee</b> for <b id="previewOccasion">Occasion</b>.</p>
+      <div class="gift-preview-mail">
+        <div class="preview-banner">
+          You've received a donation gift from &lt;Your Name&gt;, made on your behalf to DEMO charity.
+          You can also gift a donation to someone you care about.
+        </div>
+        <div class="preview-body">
+          <div class="preview-script">Congratulations</div>
+          <p id="previewMessage" class="preview-msg"></p>
+          <div class="preview-table" id="previewTable"></div>
+        </div>
+      </div>
+      <div class="gift-actions">
+        <div></div>
+        <div class="checkout-actions">
+          <button type="button" class="proceed-btn square" id="giftConfirmBtn">Confirm</button>
+          <p class="powered">Powered by <b>dana</b><b class="mojo">mojo</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/widget.js"></script>
+</body>
+</html>
